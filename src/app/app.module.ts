@@ -18,6 +18,8 @@ import { MenuItemComponent } from './restaurant-detail/menu-item/menu-item.compo
 import { ShoppingCartComponent } from './restaurant-detail/shopping-cart/shopping-cart.component';
 import { ReviewsComponent } from './restaurant-detail/reviews/reviews.component';
 import { ShoppingCartService } from './restaurant-detail/shopping-cart/shopping-cart.service';
+import { OrderComponent } from './order/order.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -32,12 +34,14 @@ import { ShoppingCartService } from './restaurant-detail/shopping-cart/shopping-
     MenuComponent,
     MenuItemComponent,
     ShoppingCartComponent,
-    ReviewsComponent
+    ReviewsComponent,
+    OrderComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES)
+    RouterModule.forRoot(ROUTES),
+    FormsModule
   ],
   providers: [
     RestaurantsService,
