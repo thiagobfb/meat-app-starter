@@ -4,8 +4,6 @@
 
 <section class="content">
   <section class="invoice">
-    {{form.valid}}
-    {{form.value | json}}
     <form #form="ngForm" novalidate>
       <div class="row">
         <div class="col-xs-12">
@@ -20,23 +18,20 @@
           <p class="lead">Endereço de Entrega:</p>
         </div>
         <div class="col-sm-6 col-xs-12">
-          <mt-input></mt-input>
+          <mt-input-container errorMessage="Campo obrigatório e com 5 caracteres" label="Endereço" >
+            <input type="text" class="form-control" id="endereco" name="address" ngModel required minlength="5" placeholder="Endereço" autocomplete="off">
+          </mt-input-container>
         </div>
-        <div class="col-sm-2 col-xs-6">
-          <div class="form-group" [class.has-success]="iptNumber.valid && (iptNumber.dirty || iptNumber.touched)"
-               [class.has-error]="!iptNumber.valid && (iptNumber.dirty || iptNumber.touched)">
-            <label class="control-label sr-only" for="numero"><i class="fa fa-check"></i> Número</label>
-            <input type="text" class="form-control" id="numero" #iptNumber="ngModel" name="number" ngModel required placeholder="Número" autocomplete="off">
-            <span class="help-block" *ngIf="iptNumber.valid && (iptNumber.dirty || iptNumber.touched)"><i class="fa fa-check"></i> Ok</span>
-            <span class="help-block" *ngIf="!iptNumber.valid && (iptNumber.dirty || iptNumber.touched)"><i class="fa fa-remove"></i> Campo obrigatório</span>
-          </div>
-        </div>
-        <div class="col-sm-4 col-xs-6">
-          <div class="form-group">
-            <label class="control-label sr-only" for="complemento"><i class="fa fa-check"></i> Complemento</label>
-            <input type="text" class="form-control" id="complemento" #iptOptional="ngModel" name="optional" ngModel placeholder="Complemento" autocomplete="off">
-          </div>
+        <div class="col-sm-3 col-xs-6">
+          <mt-input-container errorMessage="Obrigatório e somente números" label="Número">
+            <input type="text" class="form-control" id="numero" name="number" pattern="^[0-9]*$" ngModel required placeholder="Número" autocomplete="off">
+          </mt-input-container>
 
+        </div>
+        <div class="col-sm-3 col-xs-6">
+          <mt-input-container>
+            <input type="text" class="form-control" id="complemento" name="optionalAddress" ngModel placeholder="Complemento" autocomplete="off">
+          </mt-input-container>
         </div>
         <!-- /.col -->
       </div>
@@ -47,51 +42,7 @@
         <div class="col-xs-12">
           <p class="lead">Itens do Pedido:</p>
         </div>
-        <div class="col-xs-12 table-responsive">
-
-          <table class="table table-striped">
-            <thead>
-            <tr>
-              <th class="text-center">Quantidade</th>
-              <th>Item</th>
-              <th>Descrição</th>
-              <th class="text-right">Subtotal</th>
-              <th class="text-right"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td class="text-center">
-                <a class="btn btn-sm"><i class="fa fa-minus"></i></a>
-                1
-                <a class="btn btn-sm"><i class="fa fa-plus"></i></a>
-              </td>
-              <td>Cup Cake</td>
-
-              <td>Recheado com doce de leite</td>
-              <td class="text-right">R$ 10,00</td>
-              <td class="text-right">
-                <a class="btn btn-sm danger"><i class="fa fa-remove"></i></a>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-center">
-                <a class="btn btn-sm"><i class="fa fa-minus"></i></a>
-                1
-                <a class="btn btn-sm"><i class="fa fa-plus"></i></a>
-              </td>
-              <td>Croissant</td>
-
-              <td>Recheado com presunto e queijo</td>
-              <td class="text-right">R$ 10,00</td>
-              <td class="text-right">
-                <a class="btn btn-sm danger "><i class="fa fa-remove"></i></a>
-              </td>
-            </tr>
-
-            </tbody>
-          </table>
-        </div>
+        <mt-order-items [items]="cartItems()" (increaseQty)="increaseQty($event)" (decreaseQty)="decreaseQty($event)" (remove)="remove($event)"></mt-order-items>
         <!-- /.col -->
       </div>
       <!-- /.row -->
@@ -102,27 +53,7 @@
           <p class="lead">Formas de Pagamento:</p>
 
           <div class="form-group">
-            <div>
-              <label>
-                <div class="iradio_flat-red checked" aria-checked="false" aria-disabled="false"
-                     style="position: relative;">
-                  <input type="radio" name="r3" class="flat-red" checked="" style="position: absolute; opacity: 0;"/>
-                  <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                </div>
-                Dinheiro
-              </label>
-            </div>
-            <div>
-              <label>
-                <div class="iradio_flat-red" aria-checked="false" aria-disabled="false"
-                     style="position: relative;">
-                  <input type="radio" name="r3" class="flat-red" checked="" style="position: absolute; opacity: 0;"/>
-                  <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                </div>
-                Cartão de Débito
-              </label>
-            </div>
-
+            <mt-radio [options]="paymentOptions"name="paymentOption" ngModel required></mt-radio>
           </div>
 
         </div>
@@ -130,22 +61,7 @@
         <div class="col-sm-6 col-xs-12">
           <p class="lead">Frete e Total:</p>
 
-          <div class="table-responsive">
-            <table class="table">
-              <tbody><tr>
-                <th style="width:50%">Itens:</th>
-                <td class="text-right">R$ 20,00</td>
-              </tr>
-              <tr>
-                <th>Frete:</th>
-                <td class="text-right">R$ 8,00</td>
-              </tr>
-              <tr>
-                <th>Total:</th>
-                <td class="text-right">R$ 28,00</td>
-              </tr>
-              </tbody></table>
-          </div>
+          <mt-delivery-costs [delivery]="delivery" [itemsValue]="itemsValue()"></mt-delivery-costs>
         </div>
         <!-- /.col -->
       </div>
@@ -154,7 +70,7 @@
 
     <div class="row">
       <div class="col-xs-12">
-        <button href="order-summary.html" [disabled]="!form.valid" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Concluir Pedido
+        <button (click)="checkOrder(form.value)" href="order-summary.html" [disabled]="!form.valid && cartItems().length === 0" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Concluir Pedido
         </button>
       </div>
     </div>
