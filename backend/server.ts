@@ -1,6 +1,8 @@
 import * as jsonServer from 'json-server';
 import * as fs from 'fs';
 import * as https from 'https';
+import { handleAuthentication } from './auth';
+import { handleAuthorization } from './authz';
 
 
 const server = jsonServer.create();
@@ -13,6 +15,12 @@ server.use(middlewares)
 // You can use the one used by JSON Server
 server.use(jsonServer.bodyParser)
 
+//middleware para login
+server.post('/login', handleAuthentication)
+
+//middleware para autorização
+server.use('/orders', handleAuthorization)
+
 // Use default router
 server.use(router)
 
@@ -23,5 +31,5 @@ const options = {
 
 const port = 3001;
 https.createServer(options, server).listen(port, () => {
-  console.log(`JSON Server is running on https:localhost:${port}`)
+  console.log(`JSON Server is running on https://localhost:${port}`)
 })
