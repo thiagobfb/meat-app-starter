@@ -15,10 +15,10 @@ server.use(middlewares)
 // You can use the one used by JSON Server
 server.use(jsonServer.bodyParser)
 
-//middleware para login
+// middleware para login
 server.post('/login', handleAuthentication)
 
-//middleware para autorização
+// middleware para autorização
 server.use('/orders', handleAuthorization)
 
 // Use default router
