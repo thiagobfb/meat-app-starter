@@ -5,6 +5,7 @@ import { CartItem } from '../restaurant-detail/shopping-cart/cart-item.model';
 import { Order, OrderItem } from './order.model';
 import { Router } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'mt-order',
@@ -79,7 +80,7 @@ export class OrderComponent implements OnInit {
     order.orderItems = this.cartItems()
       .map((cartItem) => new OrderItem(cartItem.quantity, cartItem.menuItem.id));
     this.orderService.checkOrder(order)
-      .do((orderId: string) => this.orderId = orderId)
+      .pipe(tap((orderId: string) => this.orderId = orderId))
       .subscribe((orderId: string) => {
       this.router.navigate(['/order-summary']);
       this.orderService.clear();
