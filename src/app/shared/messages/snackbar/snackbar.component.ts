@@ -40,7 +40,7 @@ export class SnackbarComponent implements OnInit {
         this.message = message;
         this.snackVisibility = 'visible';
       }),
-      switchMap(message => Observable.timer(3000))
+      switchMap(message => timer(3000))
       // tslint:disable-next-line:no-shadowed-variable
       ).subscribe(timer => this.snackVisibility = 'hidden');
   }
